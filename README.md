@@ -39,7 +39,7 @@ Please do the following steps to set up the lab:
 
 ![arista_download_1](images/arista_download_1.png)
 
-Please download images later than 4.28. We will use 4.30.4M for our lab. 
+Please download images later than 4.28. We will use 4.32.0F for our lab. 
 
 ![arista_downaload_2](images/arista_download_2.png)
 
