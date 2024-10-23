@@ -19,6 +19,24 @@ Having said that, GitHub offer advantages such as larger community, better integ
 
 ## Basic Setup
 
+Let's go ahead and create a new project on GitLab. We can create a new project from the ```+``` sign and pick 'New project/repository':
+
+![create_gitlab_project](images/create_gitlab_project.png)
+
+We will choose to create a blank project: 
+
+![create_blank_project](images/create_blank_project.png)
+
+Feel free to use any name you'd like, but we will use 'Autocon_Lab1' for the example: 
+
+![gitlab_autocon_lab1](images/gitlab_autocon_lab1.png)
+
+Once the repository is created, we will use this as our remote source. Take a note of the URL and use the clip board to copy the URL: 
+
+![repository_url](images/repository_url.png)
+
+We will come back to our codespace to continue with the basic Git setup. 
+
 ```
 git config
 ``` 
