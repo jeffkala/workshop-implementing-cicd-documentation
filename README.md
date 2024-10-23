@@ -165,7 +165,25 @@ Appending trace to coordinator...ok                 code=202 job=8156204076 job-
 
 - Launch Codespace 
 
-[![video_demo](images/video_demo_screenshot.png)](https://www.youtube.com/watch?v=KJMVH2okO24)
+Step 1. Overview and Software Download
+
+[![video_step_1](images/video_step_1.png)](https://www.youtube.com/watch?v=p7FcvGOZHuY)
+
+Step 2. Codespace Launch and Preparation
+
+[![video_step_2](images/video_step_2.png)](https://www.youtube.com/watch?v=FbbZD1IWgFA)
+
+Step 3. Create Gitlab Project
+
+[![video_step_3](images/video_step_3.png)](https://www.youtube.com/watch?v=Rqtnxg9mPmM)
+
+Step 4. Runner Registration
+
+[![video_step_4](images/video_step_4.png)](https://www.youtube.com/watch?v=oHII3icJgB8)
+
+That is it, having gone thru the steps will ensure we can jump right into the workshop lab at Autocon2. 
+
+Below is an optional step for those who are somewhat familiar with Gitlab and want to check the end-to-end setup. 
 
 ## (Optional) Checking for end-to-end Lab Setup
 
