@@ -93,7 +93,22 @@ This message shows that your installation appears to be working correctly.
 
 ``docker import cEOS64-lab-4.32.0F.tar ceos:4.32.0F``
 
-4. Register GitLab Runner (screenshot following the steps): 
+4. Create GitLab Project
+
+Let's create a GitLab Project: 
+
+![create_gitlab_project](images/create_gitlab_project.png)
+
+Choose Blank Project: 
+
+![create_blank_project](images/create_blank_project.png)
+
+Pick a name for the project: 
+
+![gitlab_autocon_lab1](images/gitlab_autocon_lab1.png)
+
+
+5. Register GitLab Runner (screenshot following the steps): 
     - Get runner token via Project -> Settings -> CI/CD -> Project Runners
     - We will use tags to specify the jobs this runner can run
     - Register runner via the following command ```gitlab-runner register  --url https://gitlab.com  --token <token>```
@@ -145,6 +160,8 @@ Appending trace to coordinator...ok                 code=202 job=8156204076 job-
 
 
 ## Lab Setup Walkthru Video
+
+- Launch Codespace 
 
 [![video_demo](images/video_demo_screenshot.png)](https://www.youtube.com/watch?v=KJMVH2okO24)
 

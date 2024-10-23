@@ -1,3 +1,4 @@
-# Lab 2. TBD
+# Lab 2. First Pipeline
 
-TBD
+In this lab, we will start to build our CI/CD pipeline on GitLab. 
+

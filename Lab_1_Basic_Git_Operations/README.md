@@ -62,7 +62,7 @@ git log
 
 ```
 git branch
-git checkout
+git checkout branch
 git checkout main
 git merge 
 ```
