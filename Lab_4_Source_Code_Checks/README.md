@@ -13,6 +13,16 @@ Click on the `Fork` button which is in the top right of the page.
 
 ![gitlab-fork-project](./images/gitlab-fork-project.png)
 
+## Create Access Token and Update Git Remote
+
+Now that you have your fork lets create a access token so we can push code into your fork later.
+
+In GitLab UI navigate to Settings -> Access Tokens
+
+![nav-access-token](./images/nav-access-token.png)
+
+Save this token somewhere safe!
+
 ## Clone the GitLab Forked Project into Codespaces
 
 Now clone the GitLab repo in to your codespace environment. This will allow everything to be managed from this single place.
@@ -28,7 +38,23 @@ Receiving objects: 100% (597/597), 212.95 KiB | 9.68 MiB/s, done.
 Resolving deltas: 100% (324/324), done.
 ```
 
-TODO: Add screenshot of codespaces with cloned repo.
+Once the forked repository is cloned into codespace you will see it in your files.
+
+![codespace-with-fork](./images/codespace-with-fork.png)
+
+Next, create an access token. The scopes are in the screenshot below.
+
+![access-token](./images/access-token-generated.png)
+
+
+Finally, in set your origin with your HTTP basic authentication.
+
+From within the `ac2_cicd_workshop` directory.
+
+```sh
+@jeffkala ➜ /workspaces/autocon2-cicd-workshop-dev/ac2-cicd-workshop/ac2_cicd_workshop (Lab_4_Source_Code_Checks) $ git remote set-url origin https://<gitlab-user>:<glpat>@gitlab.
+com/jeffkala/ac2-cicd-workshop.git
+```
 
 ## Run Containerlab Topology and Update the Nornir Inventory
 
@@ -36,6 +62,12 @@ Due to the nature of GitHub's codespaces; and the docker networking within; ther
 
 1. Execute the containerlab deploy command which based on the topology file will auto assign mgmt interfaces to the lab equipment.
 
+Navigate to clab directory:
+```
+@jeffkala ➜ /workspaces/autocon2-cicd-workshop-dev (jkala-work) $ cd clab/
+```
+
+Start the topology:
 ```
 @jeffkala ➜ /workspaces/autocon2-cicd-workshop-dev/clab (jkala-work) $ sudo containerlab deploy --topo ceos-lab.clab.yml 
 INFO[0000] Containerlab v0.59.0 started                 
@@ -46,14 +78,14 @@ INFO[0083] Adding ssh config for containerlab nodes
 +---+---------+--------------+--------------+------+---------+---------------+--------------+
 | # |  Name   | Container ID |    Image     | Kind |  State  | IPv4 Address  | IPv6 Address |
 +---+---------+--------------+--------------+------+---------+---------------+--------------+
-| 1 | ceos-01 | 45ff3e72dbee | ceos:4.32.0F | ceos | running | 172.17.0.3/16 | N/A          |
-| 2 | ceos-02 | b9782cdb4d60 | ceos:4.32.0F | ceos | running | 172.17.0.6/16 | N/A          |
-| 3 | ceos-03 | 0796d1302ef1 | ceos:4.32.0F | ceos | running | 172.17.0.4/16 | N/A          |
-| 4 | ceos-04 | 90779f1b05fa | ceos:4.32.0F | ceos | running | 172.17.0.5/16 | N/A          |
+| 1 | ceos-01 | 83980f93c345 | ceos:4.32.0F | ceos | running | 172.17.0.6/16 | N/A          |
+| 2 | ceos-02 | d001c87a784e | ceos:4.32.0F | ceos | running | 172.17.0.4/16 | N/A          |
+| 3 | ceos-03 | 603aacedc2e0 | ceos:4.32.0F | ceos | running | 172.17.0.5/16 | N/A          |
+| 4 | ceos-04 | 7ac8e8f17ecd | ceos:4.32.0F | ceos | running | 172.17.0.3/16 | N/A          |
 +---+---------+--------------+--------------+------+---------+---------------+--------------+
 ```
 
-2. Now that the lab has been deployed in the Codespace environment, and we have the mgmt IPs of the equipment we must update the Nornir Inventory host file with the assigned IPs.
+2. Now that the lab has been deployed in the Codespace environment, and we have the mgmt IPs of the equipment we must update the Nornir inventory host file with the assigned IPs.
 
 3. To get started we will checkout the GitLab branch called `Lab_4_Source_Code_Checks` where we will update our Nornir inventory and push the code up to run the code checks.
 
@@ -62,7 +94,7 @@ INFO[0083] Adding ssh config for containerlab nodes
 From within the Codespace terminal change into the newly cloned fork.
 
 ```sh
-cd ac2_cicd_workshop/
+cd ../ac2-cicd-workshop/ac2_cicd_workshop/
 ```
 
 Next, checkout the `Lab_4_Source_Code_Checks` branch.
@@ -75,6 +107,23 @@ git switch Lab_4_Source_Code_Checks
 5. Now navigate to ac2_cicd_workshop --> inventory --> hosts.yml
 
 Update the host definitions `hostname` field with the correct IP address from the containerlab deploy command output.
+
+For example the updates would look like this.
+```yml
+---
+ceos-01:
+  hostname: "172.17.0.6"
+... omitted ...
+ceos-02:
+  hostname: "172.17.0.4"
+... omitted ...
+ceos-03:
+  hostname: "172.17.0.5"
+... omitted ...
+ceos-04:
+  hostname: "172.17.0.3"
+... omitted ...
+```
 
 ## Review the Existing Pipeline
 
@@ -151,9 +200,11 @@ git add -A;git commit -m "lab4 updates";git push -u origin Lab_4_Source_Code_Che
 
 4. Go into your GitLab UI and navigate to the forked project.
 5. Navigate to Builds from the side menu and click on Pipelines.
-6. Watch your Pipeline run!!
 
-TODO: Images
+![nav-pipeline](./images/nav-build-pipelines.png)
 
-1. Quick GitLab Navigation
-2. Show pipeline success for 2 stages.
+6. Watch your Pipeline run
+
+![pipeline-overview](./images/pipeline-overview.png)
+
+![pipeline-details](./images/pipeline-details.png)

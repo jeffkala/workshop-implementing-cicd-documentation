@@ -102,15 +102,7 @@ This message shows that your installation appears to be working correctly.
 docker import cEOS64-lab-4.32.0F.tar ceos:4.32.0F
 ```
 
-4. Clone the GitLab CICD Project
-
-```sh
-git clone https://gitlab.com/jeffkala/ac2-cicd-workshop
-```
-
-This will put a forked copy of the repository into your GitLab namespace.
-
-5. Run the GitLab Runner in a docker container.
+4. Run the GitLab Runner in a docker container.
 
 ```sh
 docker run -d --name gitlab-runner --restart always \
@@ -119,7 +111,7 @@ docker run -d --name gitlab-runner --restart always \
 gitlab/gitlab-runner:latest
 ```
 
-6. Register GitLab Runner (screenshot following the steps): 
+5. Register GitLab Runner (screenshot following the steps): 
     - Under the GitLab project you created, get runner token via Project -> Settings -> CI/CD -> Project Runners. 
     - When creating this runner, we will use tags to specify the jobs this runner can pickup. 
     - Copy the `token`.
