@@ -176,7 +176,7 @@ Video 3. Create Gitlab Project
 
 Video 4. Runner Registration
 
-[![video_step_4](images/video_step_4.png)](https://www.youtube.com/watch?v=oHII3icJgB8)
+[![video_step_4](images/video_step_4.png)](https://www.youtube.com/watch?v=I3ng43OSUjc)
 
 That is it, having gone thru the steps will ensure we can jump right into the workshop lab at Autocon2. 
 
