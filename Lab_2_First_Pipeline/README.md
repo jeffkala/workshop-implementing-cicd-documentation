@@ -13,6 +13,7 @@ Let's create a new file named ```.gitlab-ci.yml``` at the root level of the proj
 In the file, we will have the following content and use "main" as the target branch: 
 
 ```
+---
 stages: 
   - deploy
 
@@ -41,15 +42,16 @@ But hold on a second, if we take a closer look, we can see the runner that ran t
 
 ![runner_4](images/runner_4.png)
 
-If we go back to our CI/CD -> Runners page, we can see there are both the runners we registered under our Codespace, as well as shared runners provided by GitLab: 
+If we go back to our Settings -> CI/CD -> Runners page, we can see there are both the runners we registered under our Codespace, as well as shared runners provided by GitLab: 
 
-![shared_runners](images/shared_runners.png)
+![project_runners](images/shared_runners_local.png)
+![shared_runners](images/shared_runners_all.png)
 
 We will add a tag to the stage to allow us to pin the job to the particular runner. We can go back to ```.gitlab-ci.yml``` file and edit it directly in the page: 
 
 ![edit_runnder](images/edit_runner.png)
 
-Add the tag to what you have set it out when the runner was registered, for me, it was ```ericchou-1```: 
+Add the tag to what you have set it out when the runner was registered, for me, it was ```jeff-local-runner```: 
 
 ```
 stages: 
@@ -59,34 +61,24 @@ deploy testing:
   image: "ubuntu:22.04"
   stage: deploy
   tags: 
-    - "ericchou-1"
+    - "jeff-local-runner"
   script: 
     - echo "hello world"
 ```
 
-Now when we look at the detail page, we can match it up with the previously registered runner (such as the name of the runner 7c1081ade0ef): 
+Now when we look at the detail page, we can match it up with the previously registered runner (such as the name of the runner 2T20_Tgl): 
 
 ![project_runner](images/project_runner.png)
-
-```
-$ docker run --rm -it -v /srv/gitlab-runner/config:/etc/gitlab-runner gitlab/gitlab-runner register
-Runtime platform                                    arch=amd64 os=linux pid=7 revision=12030cf4 version=17.5.3
-<skip>
-Verifying runner... is valid                        runner=t3_os7SaS
-Enter a name for the runner. This is stored only in the local config.toml file:
-[7c1081ade0ef]: 
-<skip>
-```
 
 Cool, we are moving right along. Let's build on this example with a Netmiko script. 
 
 ## Launch Containerlab
 
-We have pre-installe containerlab executable and the topology file during the Codespace built process. In a separate terminal window, let's launch the lab: 
+We have pre-installed containerlab executable and the topology file during the Codespace built process. In a separate terminal window, let's launch the lab: 
 
 ```
 $ pwd
-/workspaces/autocon2-cicd-workshop
+/workspaces/workshop-implementing-cicd
 
 $ cd clab/
 $ ls -lia
@@ -100,7 +92,7 @@ $ sudo containerlab deploy --topo ceos-lab.clab.yml
 INFO[0000] Containerlab v0.59.0 started                 
 INFO[0000] Parsing & checking topology file: ceos-lab.clab.yml 
 WARN[0000] Unable to init module loader: stat /lib/modules/6.5.0-1025-azure/modules.dep: no such file or directory. Skipping... 
-INFO[0000] Creating lab directory: /workspaces/autocon2-cicd-workshop/clab/clab-ceos-lab 
+INFO[0000] Creating lab directory: /workspaces/workshop-implementing-cicd/clab/clab-ceos-lab 
 INFO[0000] Creating container: "ceos-04"                
 INFO[0000] Creating container: "ceos-02"                
 INFO[0000] Running postdeploy actions for Arista cEOS 'ceos-02' node 
@@ -178,18 +170,15 @@ from nornir import InitNornir
 from nornir_netmiko import netmiko_send_command
 from nornir_utils.plugins.functions import print_result
 
-# Initialize Nornir, by default it will look for the 
-# hosts.yaml file in the same directory. 
+# Initialize Nornir, by default it will look for the
+# hosts.yaml file in the same directory.
 nr = InitNornir()
 
-# Run the show version command for each of the devices. 
-# store the value in the results variable. 
-result = nr.run(
-    task=netmiko_send_command,
-    command_string="show version"
-)
+# Run the show version command for each of the devices.
+# store the value in the results variable.
+result = nr.run(task=netmiko_send_command, command_string="show version")
 
-# print the results in 
+# print the results in
 print_result(result)
 ```
 
@@ -253,13 +242,13 @@ Great! This script works, let's see how we can move this to a CI/CD pipeline and
 The first thing we will do is to move the hosts.yaml and show_version.py files to the project directory. In the steps below we show how to do this in Codespace via command line, but it can also be done on the web interface on GitLab. 
 
 ```
-$ cd autocon_lab1/
+$ mkdir cicd_lab1 && cd cicd_lab1/
 
 $ mv ../hosts.yaml .
 $ mv ../show_version.py .
 
 $ ls
-hosts.yaml  my_file.txt  new_file_under_dev.txt  README.md  show_version.py
+hosts.yaml show_version.py
 ```
 
 We will also do a ```git pull``` to pull down the ```.gitlab-ci.yml``` file: 
@@ -271,7 +260,7 @@ remote: Counting objects: 100% (7/7), done.
 remote: Compressing objects: 100% (6/6), done.
 remote: Total 6 (delta 3), reused 0 (delta 0), pack-reused 0 (from 0)
 Unpacking objects: 100% (6/6), 625 bytes | 312.00 KiB/s, done.
-From gitlab.com:eric-chou-1/autocon_lab1
+From gitlab.com:jeffkala/cicd-workshop-lab1
    485c581..cd58621  main       -> origin/main
 Updating 485c581..cd58621
 Fast-forward
@@ -282,7 +271,7 @@ Fast-forward
 
  We will swap out the ```echo "hello world"``` in the ```.gitlab-ci.yml``` file as well as change the base image to ```python:3.10```:  
 
- ```
+ ```yaml
  stages: 
   - deploy
 
@@ -290,7 +279,7 @@ deploy testing:
   image: "python:3.10"
   stage: deploy
   tags: 
-    - "ericchou-1"
+    - "ericchou-1"  # Update with your project runner tag!!
   script: 
     - python3 show_version.py
  ```
@@ -313,7 +302,7 @@ Delta compression using up to 2 threads
 Compressing objects: 100% (5/5), done.
 Writing objects: 100% (5/5), 913 bytes | 913.00 KiB/s, done.
 Total 5 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
-To gitlab.com:eric-chou-1/autocon_lab1.git
+To gitlab.com:jeffkala/cicd-workshop-lab1.git
    cd58621..2252bbd  main -> main
 ```
 
@@ -321,11 +310,11 @@ When we hop back to the GitLab repository, we see the pipeline failed:
 
 ![show_version_1](images/show_version_1.png)
 
-If we take a closer look, we can see the reason for the failure is becuase the runners do not have necessary nornir packages. 
+If we take a closer look, we can see the reason for the failure is because the runners do not have necessary nornir packages. 
 
 ![show_version_2](images/show_version_2.png)
 
-This brings up an important point, it is that each runner is self-containerd and ran atomically. We need to make sure all the necessary steps are listed out in the pipeline. 
+This brings up an important point, it is that each runner is self-contained and ran atomically. We need to make sure all the necessary steps are listed out in the pipeline. 
 
 Here is a modified version of the ```.gitlab-ci.yml``` file: 
 
@@ -337,7 +326,7 @@ deploy testing:
   image: "python:3.10"
   stage: deploy
   tags: 
-    - "ericchou-1"
+    - "ericchou-1"  # Update with your project runner tag!!
 
   script: 
     - pip3 install nornir_utils nornir_netmiko
@@ -370,7 +359,7 @@ Running on codespaces-02d9df...
 Getting source from Git repository
 00:01
 Fetching changes with git depth set to 20...
-Reinitialized existing Git repository in /workspaces/autocon2-cicd-workshop-dev/builds/t3_NNne7z/0/eric-chou-1/autocon_lab1/.git/
+Reinitialized existing Git repository in /workspaces/workshop-implementing-cicd-dev/builds/t3_NNne7z/0/jeffkala/cicd-workshop-lab1/.git/
 Checking out 66eae4e5 as detached HEAD (ref is main)...
 Removing nornir.log
 Skipping Git submodules setup
@@ -448,6 +437,3 @@ Job succeeded
 ## Next Steps
 
 Congratulations on building your first Pipeline! This is a huge step forward. In the next lab, we will take a look at some of the tools to help the team collaborate together. 
-
-
-
