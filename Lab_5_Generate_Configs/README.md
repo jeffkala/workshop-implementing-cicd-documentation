@@ -1,15 +1,15 @@
 # Lab 5 - Generate Configurations with Jinja2 Templates
 
-In lab 5 we're going to build ontop of our lab 4. Lab 4 only dealt with source code checks. We're now going to start building and testing our CICD pipeline that can actually execute some network automation!
+In lab 5 we're going to build on top of our lab 4. Lab 4 only dealt with source code checks. We're now going to start building and testing our CICD pipeline that can actually execute some network automation!
 
 ## Checkout Lab 5 Git Branch
 
 The first step in this lab is to checkout the Lab 5 branch from our forked repository.
 
-1. Ensure you're in the correct GitLab forked repository directory. (./ac2_cicd_workshop)
+1. Ensure you're in the correct GitLab forked repository directory. (./cicd_workshop)
 
 ```sh
-cd ac2-cicd-workshop/ac2_cicd_workshop/
+cd workshop-implementing-cicd-pipelines/cicd_workshop/
 ```
 
 2. Switch into the Lab 5 Branch
@@ -20,10 +20,10 @@ git switch Lab_5_Generate_Configs
 
 ## Ensure Container Lab Topology is up
 
-In Lab 4 we started our Containerlab topology. Quickly make sure that is still up and the Mgmt IPs havent changed.
+In Lab 4 we started our Containerlab topology. Quickly make sure that is still up and the Mgmt IPs haven't changed.
 
 ```
-@jeffkala ➜ /workspaces/autocon2-cicd-workshop-dev/clab (jkala-work) $ sudo containerlab inspect
+@jeffkala ➜ /workspaces/workshop-implementing-cicd/clab (jkala-work) $ sudo containerlab inspect
 INFO[0000] Parsing & checking topology file: ceos-lab.clab.yml 
 +---+---------+--------------+--------------+------+---------+---------------+--------------+
 | # |  Name   | Container ID |    Image     | Kind |  State  | IPv4 Address  | IPv6 Address |
@@ -82,14 +82,14 @@ generate-config-job:
   stage: "lab-5-generate"
   script:
     - "echo 'Generating configuration files..'"
-    - "poetry run python ac2_cicd_workshop/cli.py generate-config --inventory-dir ac2_cicd_workshop/inventory"
+    - "uv run python cicd_workshop/cli.py generate-config --inventory-dir cicd_workshop/inventory"
 
 diff-config-job:
   stage: "lab-5-diff"
   allow_failure: true
   script:
     - "echo 'Diff configuration files..'"
-    - "diff -y -r ac2_cicd_workshop/output/configs/ topologies/network-lab/startup-configs/"
+    - "diff -y -r cicd_workshop/output/configs/ topologies/network-lab/startup-configs/"
 ```
 
 You can see here, we're simply reusing our click app that we packaged with the application. We're running the click app and passing in our inventory source. This will run the Nornir tasks to generate and save the new configuration files, by default saving them in the GitLab repo directory `output`, and naming the files `<hostname>.conf`.
@@ -98,20 +98,20 @@ Secondly, we run an additional job that simply does a diff of the new configs we
 
 ## Quick Config Change Explanation
 
-Our configuration change to demonstate our CICD pipeline will be a simple OSPF change. The containerlab topology remains the same, we're simply adding Lo100 as an OSPF area and then validating our changes.
+Our configuration change to demonstrate our CICD pipeline will be a simple OSPF change. The containerlab topology remains the same, we're simply adding Lo100 as an OSPF area and then validating our changes.
 
 > [!INFO]
 > As this is not a Network Engineering workshop, we're keeping it simple.
 
 The diagram below explains more about the topology and the goals.
 
-![lab-diagram](./images/ac2-topology-Lab5.png)
+![lab-diagram](./images/topology-Lab5.png)
 
 ## Push our Changes and Run the Pipeline
 
 Now that Lab 5 has been explained, lets quickly update our Nornir inventory hosts file and uncomment out a few new attributes that will render new configurations to accomplish the goals explained in the diagram!
 
-1. Navigate to the `hosts.yml` file via `ac2_cicd_workshop/inventory/` directory.
+1. Navigate to the `hosts.yml` file via `cicd_workshop/inventory/` directory.
 2. For each host uncomment out the two sections.
 
 First uncomment out the `area` definition under `Lo100`.
@@ -134,7 +134,7 @@ First uncomment out the `area` definition under `Lo100`.
             area: "0.0.0.4"
 ```
 
-Secondly, uncomment out the router ospf stub area configuration.
+Secondly, uncomment out the router OSPF stub area configuration.
 
 ### Before
 
