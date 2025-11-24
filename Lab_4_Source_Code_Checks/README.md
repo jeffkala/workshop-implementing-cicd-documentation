@@ -4,7 +4,7 @@ During the first 3 labs we've utilized a new project and built upon it. For labs
 
 ## Fork GitLab Repository
 
-Navigate to the CICD boilerplate project located at: https://gitlab.com/jeffkala/ac2-cicd-workshop
+Navigate to the CICD boilerplate project located at: https://gitlab.com/jeffkala/workshop-implementing-cicd-pipelines
 
 Click on the `Fork` button which is in the top right of the page.
 
@@ -13,23 +13,16 @@ Click on the `Fork` button which is in the top right of the page.
 
 ![gitlab-fork-project](./images/gitlab-fork-project.png)
 
-## Create Access Token and Update Git Remote
-
-Now that you have your fork lets create a access token so we can push code into your fork later.
-
-In GitLab UI navigate to Settings -> Access Tokens
-
-![nav-access-token](./images/nav-access-token.png)
-
-Save this token somewhere safe!
-
 ## Clone the GitLab Forked Project into Codespaces
 
-Now clone the GitLab repo in to your codespace environment. This will allow everything to be managed from this single place.
+Now clone the GitLab repo in to your codespace environment. This will allow everything to be managed from this single place. 
+
+> [!NOTE]
+> The SSH Key you created in Lab 1 will work here too!
 
 ```sh
-@jeffkala ➜ /workspaces/autocon2-cicd-workshop-dev (jkala-work) $ git clone https://gitlab.com/jeffkala/ac2-cicd-workshop.git
-Cloning into 'ac2-cicd-workshop'...
+@jeffkala ➜ /workspaces/workshop-implementing-cicd (main) $ git clone git@gitlab.com:jeffkala/workshop-implementing-cicd-pipelines.git
+Cloning into 'workshop-implementing-cicd-pipelines'...
 remote: Enumerating objects: 597, done.
 remote: Counting objects: 100% (484/484), done.
 remote: Compressing objects: 100% (467/467), done.
@@ -42,18 +35,10 @@ Once the forked repository is cloned into codespace you will see it in your file
 
 ![codespace-with-fork](./images/codespace-with-fork.png)
 
-Next, create an access token. The scopes are in the screenshot below.
-
-![access-token](./images/access-token-generated.png)
-
-
-Finally, in set your origin with your HTTP basic authentication.
-
-From within the `ac2_cicd_workshop` directory.
+From within the `cicd_workshop` directory.
 
 ```sh
-@jeffkala ➜ /workspaces/autocon2-cicd-workshop-dev/ac2-cicd-workshop/ac2_cicd_workshop (Lab_4_Source_Code_Checks) $ git remote set-url origin https://<gitlab-user>:<glpat>@gitlab.
-com/jeffkala/ac2-cicd-workshop.git
+$ git remote set-url origin git@gitlab.com:<username>/workshop-implementing-cicd-pipelines.git
 ```
 
 ## Run Containerlab Topology and Update the Nornir Inventory
@@ -64,12 +49,12 @@ Due to the nature of GitHub's codespaces; and the docker networking within; ther
 
 Navigate to clab directory:
 ```
-@jeffkala ➜ /workspaces/autocon2-cicd-workshop-dev (jkala-work) $ cd clab/
+@jeffkala ➜ /workspaces/workshop-implementing-cicd  (main) $ cd clab/
 ```
 
 Start the topology:
 ```
-@jeffkala ➜ /workspaces/autocon2-cicd-workshop-dev/clab (jkala-work) $ sudo containerlab deploy --topo ceos-lab.clab.yml 
+@jeffkala ➜ /workspaces/workshop-implementing-cicd /clab (main) $ sudo containerlab deploy --topo ceos-lab.clab.yml 
 INFO[0000] Containerlab v0.59.0 started                 
 INFO[0000] Parsing & checking topology file: ceos-lab.clab.yml 
 < omitted >
@@ -94,7 +79,7 @@ INFO[0083] Adding ssh config for containerlab nodes
 From within the Codespace terminal change into the newly cloned fork.
 
 ```sh
-cd ../ac2-cicd-workshop/ac2_cicd_workshop/
+cd ../workshop-implementing-cicd-pipelines/cicd_workshop/
 ```
 
 Next, checkout the `Lab_4_Source_Code_Checks` branch.
@@ -104,7 +89,7 @@ Next, checkout the `Lab_4_Source_Code_Checks` branch.
 git switch Lab_4_Source_Code_Checks
 ```
 
-5. Now navigate to ac2_cicd_workshop --> inventory --> hosts.yml
+5. Now navigate to cicd_workshop --> inventory --> hosts.yml
 
 Update the host definitions `hostname` field with the correct IP address from the containerlab deploy command output.
 
@@ -129,7 +114,7 @@ ceos-04:
 
 Lab 4 is all about the "project" level source code checks.
 
-When you open the `.gitlab-ci.yml` file you will notice we have some defaults, workflow details, `before_script` definitions, stages, and more..
+When you open the `.gitlab-ci.yml` file you will notice we have some defaults, workflow details, stages, and more..
 
 Next, we will look at the `stages:` section which tells our pipeline what stages and what order they should be executed in.
 
@@ -139,7 +124,7 @@ stages:  # List of stages for jobs, and their order of execution
   - "lab-4-pytest"
 ```
 
-You will finally see the `include:` section which is where we can add additonal gitlab-ci files. We will add more files to this section throughout labs 5 and 6.
+You will finally see the `include:` section which is where we can add additional gitlab-ci files. We will add more files to this section throughout labs 5 and 6.
 
 ```yml
 include:
@@ -162,9 +147,9 @@ yamllint-job:
   stage: "lab-4-lint-and-format"
   script:
     - "echo 'Linting Nornir YAML inventory files..'"
-    - "poetry run yamllint . --config-file .yamllint.yml --strict"
+    - "uv run invoke yamllint"
 ```
-In this yamllint-job we're echoing a simple description, followed by running yamllint from within our poetry environment.
+In this yamllint-job we're echoing a simple description, followed by running yamllint from within our uv environment.
 
 3. Notice this file has all our other source code checks we want to enforce. Some simple explanations are below.
 
@@ -187,7 +172,7 @@ These are the two assumptions before you should push your code up:
 ```yml
 ---
 default:
-  image: "python:3.10"
+  image: "ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYER"
   tags:
     - "jeffkala-docker-runner-codespace"  # Update using CICD Runner Tag you used!
 ```
