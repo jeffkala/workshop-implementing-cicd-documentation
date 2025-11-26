@@ -46,8 +46,8 @@ The high-level steps are listed below:
 > This is not a python course; therefore, the code in `cli.py` won't be directly explained.
 
 2. The generate-config function uses Nornir and two tasks exposed by public libraries.
-    - `template_file` from nornir_jinja2.
-    - `write_file` from nornir_utils 
+    - `template_file` from the python library **nornir_jinja2**.
+    - `write_file` from the python library **nornir_utils** 
 
 3. Upon the template_file tasks being executed it find the entrypoint template called `eos.j2` and renders the Jinja2 files that build the configuration.
     - Data needed to render the templates is stored in the native Nornir inventory files, mainly in `hosts.yml`.
@@ -92,7 +92,7 @@ diff-config-job:
     - "diff -y -r cicd_workshop/output/configs/ topologies/network-lab/startup-configs/"
 ```
 
-You can see here, we're simply reusing our click app that we packaged with the application. We're running the click app and passing in our inventory source. This will run the Nornir tasks to generate and save the new configuration files, by default saving them in the GitLab repo directory `output`, and naming the files `<hostname>.conf`.
+You can see here, we're simply reusing our **click** app that we packaged with the application. We're running the **click** app and passing in our inventory source. This will run the Nornir tasks to generate and save the new configuration files, by default saving them in the GitLab repo directory `output`, and naming the files `<hostname>.conf`.
 
 Secondly, we run an additional job that simply does a diff of the new configs we generated compared to startup configs. Notice we `allow_failures` on this job since its simply a documentation stage.
 

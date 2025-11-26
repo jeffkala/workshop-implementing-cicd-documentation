@@ -10,12 +10,12 @@ GitLab is a platform that builds on top of Git to provide more tools for develop
 
 Why do we use GitLab instead of GitHub, especially when we are already utilize GitHub Codespace for our development platform? IMHO, when it comes to DevOps, GitLab offers some advantages over GitHub: 
 
-- GitLab has a built-in CI/CD environment while GitHub's GitHub Actions requires more setup and needs more third-party integration to be feature-parity with GitLab. 
+- GitLab has a built-in CICD environment while GitHub's GitHub Actions requires more setup and needs more third-party integration to be feature-parity with GitLab. 
 - GitLab runners were released around 2011 while GitHub Action was released in 2018. GitLab Runner has been around longer and is arguably more mature than GitHub Action. 
 - GitHub has traditionally been focused on code hosting and collaboration while GitLab has been an all-in-one DevOps platform from the beginning with project management, issue tracking, and more. 
 - GitLab offers free self-hosting option while GitHub only offers self-hosting with paid tiers.  
 
-Having said that, GitHub offer advantages such as larger community, better integration with Microsoft Cloud, and more cost efficient. Regardless, we will use GitLab as our CI/CD platform. 
+Having said that, GitHub offer advantages such as larger community, better integration with Microsoft Cloud, and more cost efficient. Regardless, we will use GitLab as our CICD platform. 
 
 ## Basic Setup
 
@@ -297,4 +297,4 @@ As you can see, Git is a robust code development tool. We are barely cover the b
 - Kirk Byer's [Git for Network Engineers Course](https://pynet.twb-tech.com/class-gne.html) class. 
 - Book: [Version Control with Git](https://www.amazon.com/Version-Control-Git-collaborative-development/dp/1449316387/)
 
-In the next lab, we will start to build our first CI/CD Pipeline, see you there! 
+In the next lab, we will start to build our first CICD Pipeline, see you there! 

@@ -1,12 +1,12 @@
 # Lab 2. First Pipeline
 
-In this lab, we will start to build our CI/CD pipeline on GitLab. If you have not done so already, please follow the steps in [README](../README.md) and make sure you have the environment set up and ready to go. 
+In this lab, we will start to build our CICD pipeline on GitLab. If you have not done so already, please follow the steps in [README](../README.md) and make sure you have the environment set up and ready to go. 
 
 ## Hello World Pipeline
 
-In this lab, we will use the same [GitLab Project](../Lab_1_Basic_Git_Operations/README.md) we set up in the last lab, however, please feel free to create another project if you'd like. 
+In this lab, we will use the same [GitLab Project](../Lab_1_Basic_Git_Operations/README.md) we set up in "Lab 1 Basic Git Operations"; however, please feel free to create another project if you'd like. 
 
-Let's create a new file named ```.gitlab-ci.yml``` at the root level of the project. The name and the location are important. 
+Let's create a new file named ```.gitlab-ci.yml``` at the root level of the project. The name and the location **are** important. 
 
 ![create_new_file](images/create_new_file.png)
 
@@ -42,7 +42,7 @@ But hold on a second, if we take a closer look, we can see the runner that ran t
 
 ![runner_4](images/runner_4.png)
 
-If we go back to our Settings -> CI/CD -> Runners page, we can see there are both the runners we registered under our Codespace, as well as shared runners provided by GitLab: 
+If we go back to our Settings -> CICD -> Runners page, we can see there are both the runners we registered under our Codespace, as well as shared runners provided by GitLab: 
 
 ![project_runners](images/shared_runners_local.png)
 ![shared_runners](images/shared_runners_all.png)
@@ -88,15 +88,15 @@ total 16
 1835106 -rw-rw-rw-   1 vscode root  877 Nov  5 16:28 ceos-lab.clab.yml
 1835107 drwxrwxrwx+  2 vscode root 4096 Nov  5 16:28 startup-configs
 
-$ sudo containerlab deploy --topo ceos-lab.clab.yml 
+$ sudo containerlab deploy --node-filter ceos-01,ceos-02 --topo ceos-lab.clab.yml 
 INFO[0000] Containerlab v0.59.0 started                 
 INFO[0000] Parsing & checking topology file: ceos-lab.clab.yml 
 WARN[0000] Unable to init module loader: stat /lib/modules/6.5.0-1025-azure/modules.dep: no such file or directory. Skipping... 
 INFO[0000] Creating lab directory: /workspaces/workshop-implementing-cicd/clab/clab-ceos-lab 
-INFO[0000] Creating container: "ceos-04"                
 INFO[0000] Creating container: "ceos-02"                
+INFO[0000] Creating container: "ceos-01"                
+INFO[0000] Running postdeploy actions for Arista cEOS 'ceos-01' node 
 INFO[0000] Running postdeploy actions for Arista cEOS 'ceos-02' node 
-INFO[0000] Running postdeploy actions for Arista cEOS 'ceos-04' node 
 <skip>
 ...
 INFO[0095] Adding containerlab host entries to /etc/hosts file 
@@ -136,13 +136,17 @@ Once the lab is ready, we can move on to create a Netmiko script.
 
 In this step, we are mainly focused on creating a Python script that can communicate with the network devices. At this point, we are not worrying about the gitlab-runner or any pipeline. 
 
-We will open up another terminal window and install the dependencies: 
+We will open up another terminal window and create a venv and install the dependencies: 
 
 ```
-$ pip3 install nornir_utils nornir_netmiko
+$ python3 -venv ~/.venvs/netmiko-venv
+
+$ source ~/.venvs/netmiko-venv/bin/activate
+
+$ pip install nornir_utils nornir_netmiko
 ```
 
-We will create the hosts.yaml file required for Netmiko, please note the IP will need to match the IP assigned to the containerlab from the last step: 
+We will create the hosts.yaml file required for Nornir-Netmiko, please note the IP will need to match the IP assigned to the containerlab from the last step: 
 
 ```
 $ cat hosts.yaml 
@@ -185,7 +189,7 @@ print_result(result)
 Let's run this script to make sure it works: 
 
 ```
-$ python3 show_version.py 
+$(netmiko-venv) python show_version.py 
 netmiko_send_command************************************************************
 * eos-1 ** changed : False *****************************************************
 vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
@@ -235,7 +239,7 @@ Free memory: 2949288 kB
 ^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ```
 
-Great! This script works, let's see how we can move this to a CI/CD pipeline and allow the runners to execute the script. 
+Great! This script works, let's see how we can move this to a CICD pipeline and allow the runners to execute the script. 
 
 ## Move Script to Pipeline
 

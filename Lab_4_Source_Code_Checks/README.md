@@ -1,6 +1,6 @@
 ## Lab 4 Source Code Checks
 
-During the first 3 labs we've utilized a new project and built upon it. For labs 4-6 we will use a project that we've created for you.
+During the first 3 labs we've utilized a new project and built upon it. For labs 4-6 we will use a project that we've created for you, this will help with the copy/pasting.
 
 ## Fork GitLab Repository
 
@@ -38,7 +38,7 @@ Once the forked repository is cloned into codespace you will see it in your file
 From within the `cicd_workshop` directory.
 
 ```sh
-$ git remote set-url origin git@gitlab.com:<username>/workshop-implementing-cicd-pipelines.git
+$ git remote set-url origin git@gitlab.com:<GitLab Username>/workshop-implementing-cicd-pipelines.git
 ```
 
 ## Run Containerlab Topology and Update the Nornir Inventory
@@ -89,7 +89,7 @@ Next, checkout the `Lab_4_Source_Code_Checks` branch.
 git switch Lab_4_Source_Code_Checks
 ```
 
-5. Now navigate to cicd_workshop --> inventory --> hosts.yml
+5. Now navigate to `cicd_workshop` --> `inventory` --> `hosts.yml`
 
 Update the host definitions `hostname` field with the correct IP address from the containerlab deploy command output.
 
@@ -112,9 +112,9 @@ ceos-04:
 
 ## Review the Existing Pipeline
 
-Lab 4 is all about the "project" level source code checks.
+Lab 4 is all about the **project** level source code checks.
 
-When you open the `.gitlab-ci.yml` file you will notice we have some defaults, workflow details, stages, and more..
+When you open the `.gitlab-ci.yml` file you will notice we have some defaults, workflow details, stages, and more.
 
 Next, we will look at the `stages:` section which tells our pipeline what stages and what order they should be executed in.
 
@@ -124,7 +124,7 @@ stages:  # List of stages for jobs, and their order of execution
   - "lab-4-pytest"
 ```
 
-You will finally see the `include:` section which is where we can add additional gitlab-ci files. We will add more files to this section throughout labs 5 and 6.
+You will finally see the `include:` section which is where we can add additional `gitlab-ci` files. We will add more files to this section throughout labs 5 and 6.
 
 ```yml
 include:
@@ -149,7 +149,7 @@ yamllint-job:
     - "echo 'Linting Nornir YAML inventory files..'"
     - "uv run invoke yamllint"
 ```
-In this yamllint-job we're echoing a simple description, followed by running yamllint from within our uv environment.
+In this yamllint-job we're echoing a simple description, followed by running **yamllint** from within our uv environment.
 
 3. Notice this file has all our other source code checks we want to enforce. Some simple explanations are below.
 

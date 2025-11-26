@@ -84,7 +84,7 @@ In the first includes file `.gitlab/ci/lab-6-pre-checks.gitlab-ci.yml` we use Ba
 > [!INFO] 
 > This barely introduces what Batfish can do. Look into [Batfish](https://batfish.org/) for more information.
 
-These steps are accomplished in the pipeline by running our click app and calling the proper function.
+These steps are accomplished in the pipeline by running our **click** app and calling the proper function.
 
 Our GitLab CI file looks similar to others but notice we're spinning up Batfish as a service within our pipeline!
 

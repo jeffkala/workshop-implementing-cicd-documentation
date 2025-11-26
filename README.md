@@ -1,9 +1,6 @@
-# Autocon2 CI/CD Workshop Development Repository
+# Implementing CICD Workshop Development Repository
 
->[!NOTE]
-> Use this repository to collaborately devlope content before publishing to user. 
-
-Hello! Welcome to [Autocon2 CI/CD workshop](https://networkautomation.forum/autocon2#workshop) proctored by [Eric Chou](https://github.com/ericchou1/), [Jeff Kala](https://github.com/jeffkala), and assisted by [Tim Fiola](https://github.com/tim-fiola). 
+Hello! Welcome to Implementing CICD Workshop proctored by [Network to Code](https://github.com/networktocode).
 
 You can find the different lab instructions in each of the folders in this repository. 
 
@@ -26,15 +23,15 @@ Here are the details regarding each components:
 
 - [GitLab](https://about.gitlab.com/pricing/): We will use the SaaS version of GitLab as the CI server. The CI server handles the committing, building, testing, staging, and releasing the changes. 
 - [GitLab Runners](https://docs.gitlab.com/runner/): GitLab runners are workers that registers itself with the GitLab server and managed by the GitLab server. They are responsible to carry out the instructions by the GitLab server. 
-- [GitHub Codespace](https://github.com/features/codespaces): We will use GitHub codepsace as our IDE as well as the virtual server to run our network lab. GitHub provides these container-based development environment for developers. We will use Containerlab to run a few network devices for our lab. GitHub offer a generous free tier in Codespace that should remain to be free for the duration of this lab. 
-- [Containerlab](https://containerlab.dev/): We will use containerlab for our lab devices running inside of codepsace.  
+- [GitHub Codespace](https://github.com/features/codespaces): We will use GitHub codespace as our IDE as well as the virtual server to run our network lab. GitHub provides these container-based development environment for developers. We will use Containerlab to run a few network devices for our lab. GitHub offer a generous free tier in Codespace that should remain to be free for the duration of this lab. 
+- [Containerlab](https://containerlab.dev/): We will use containerlab for our lab devices running inside of codespace.  
 - [Arista cEOS](https://containerlab.dev/manual/kinds/ceos/): We will use Arista cEOS for our lab for their light overhead and relative high adaption in production networks. 
 
 ## GitLab Account Registration and cEOS Download
 
 Please do the following steps to set up the lab: 
 
-1. Register for a free GitLab.com account [here](https://gitlab.com/users/sign_up) if you do not have one. For a new registration, a project name is required, you can use a temp name or 'Autocon_Lab1' as that is one of the project we will create later: 
+1. Register for a free GitLab.com account [here](https://gitlab.com/users/sign_up) if you do not have one. For a new registration, a project name is required, you can use a temp name or 'CICD Workshop Lab1' as that is one of the project we will create later: 
 
 ![gitlab_account_signup](images/gitlab_account_signup.png)
 
@@ -66,10 +63,10 @@ Alright, now it is time to tie everything together.
 Once Codespace is started, we can verify both Docker and containerlab are installed and running: 
 
 ```
-@ericchou1 ➜ /workspaces/autocon2-cicd-workshop-dev (main) $ poetry --version
+@ericchou1 ➜ /workspaces/workshop-implementing-cicd (main) $ poetry --version
 Poetry (version 1.8.4)
 
-@ericchou1 ➜ /workspaces/autocon2-cicd-workshop-dev (main) $ docker run hello-world
+@ericchou1 ➜ /workspaces/workshop-implementing-cicd (main) $ docker run hello-world
 Unable to find image 'hello-world:latest' locally
 latest: Pulling from library/hello-world
 ...<skip>
@@ -77,7 +74,7 @@ Hello from Docker!
 This message shows that your installation appears to be working correctly.
 <skip>
 
-@ericchou1 ➜ /workspaces/autocon2-cicd-workshop-dev (main) $ containerlab version
+@ericchou1 ➜ /workspaces/workshop-implementing-cicd (main) $ containerlab version
   ____ ___  _   _ _____  _    ___ _   _ _____ ____  _       _     
  / ___/ _ \| \ | |_   _|/ \  |_ _| \ | | ____|  _ \| | __ _| |__  
 | |  | | | |  \| | | | / _ \  | ||  \| |  _| | |_) | |/ _` | '_ \ 
@@ -112,7 +109,7 @@ gitlab/gitlab-runner:latest
 ```
 
 5. Register GitLab Runner (screenshot following the steps): 
-    - Under the GitLab project you created, get runner token via Project -> Settings -> CI/CD -> Project Runners. 
+    - Under the GitLab project you created, get runner token via Project -> Settings -> CICD -> Project Runners. 
     - When creating this runner, we will use tags to specify the jobs this runner can pickup. 
     - Copy the `token`.
     - Come back to the Codespace instance.
@@ -156,116 +153,3 @@ Configuration (with the authentication token) was saved in "/etc/gitlab-runner/c
 ```
 
 ![gitlabrunner_3](images/gitlabrunner_3.png)
-
-
-## Lab Setup Walkthrough Video
-
-Here are video walkthrough to help with illustrate the lab setup. 
-
-Video 1. Overview and Software Download
-
-[![video_step_1](images/video_step_1.png)](https://www.youtube.com/watch?v=p7FcvGOZHuY)
-
-Video 2. Codespace Launch and Preparation
-
-[![video_step_2](images/video_step_2.png)](https://www.youtube.com/watch?v=FbbZD1IWgFA)
-
-Video 3. Create Gitlab Project
-
-[![video_step_3](images/video_step_3.png)](https://www.youtube.com/watch?v=Rqtnxg9mPmM)
-
-Video 4. Runner Registration
-
-[![video_step_4](images/video_step_4.png)](https://www.youtube.com/watch?v=I3ng43OSUjc)
-
-That is it, having gone thru the steps will ensure we can jump right into the workshop lab at Autocon2. 
-
-Below is an optional step for those who are somewhat familiar with Gitlab and want to check the end-to-end setup. 
-
-## (Optional) Checking for end-to-end Lab Setup
-
-This is complete optional and we will go over it in the workshop as our first lab, but if you are up for some testing, we can test the end-to-end lab setup with the following steps. 
-
-- Start containerlab
-
-```
-@ericchou1 ➜ /workspaces/autocon2-cicd-workshop-dev/clab (main) $ sudo containerlab deploy --topo ceos-lab.clab.yml 
-INFO[0000] Containerlab v0.58.0 started                 
-INFO[0000] Parsing & checking topology file: ceos-lab.clab.yml 
-WARN[0000] Unable to init module loader: stat /lib/modules/6.5.0-1025-azure/modules.dep: no such file or directory. Skipping... 
-INFO[0000] Creating lab directory: /workspaces/autocon2-cicd-workshop-dev/clab/clab-ceos-lab 
-INFO[0000] Creating container: "ceos-02"                
-INFO[0000] Creating container: "ceos-01"                
-INFO[0000] Running postdeploy actions for Arista cEOS 'ceos-01' node 
-INFO[0000] Created link: ceos-01:eth1 <--> ceos-02:eth1 
-INFO[0000] Running postdeploy actions for Arista cEOS 'ceos-02' node 
-INFO[0042] Adding containerlab host entries to /etc/hosts file 
-INFO[0042] Adding ssh config for containerlab nodes     
-+---+---------+--------------+--------------+------+---------+---------------+--------------+
-| # |  Name   | Container ID |    Image     | Kind |  State  | IPv4 Address  | IPv6 Address |
-+---+---------+--------------+--------------+------+---------+---------------+--------------+
-| 1 | ceos-01 | 98ff98926159 | ceos:4.32.0F | ceos | running | 172.17.0.3/16 | N/A          |
-| 2 | ceos-02 | 73b94e874b6c | ceos:4.32.0F | ceos | running | 172.17.0.2/16 | N/A          |
-+---+---------+--------------+--------------+------+---------+---------------+--------------+
-```
- - Create a test project with the following CI file .gitlab-ci.yml
-
- ```
-stages: 
-  - deploy
-
-deploy testing:
-  image: "python:3.10"
-  stage: deploy
-  tags: 
-    - "ericchou-1"
-  script: 
-    - pip3 install nornir_utils nornir_netmiko
-    - python3 show_version.py
- ```
-
-- Create the following hosts.yaml file
-
-```
----
-eos-1:
-    hostname: '172.17.0.2'
-    port: 22
-    username: 'admin'
-    password: 'admin'
-    platform: 'arista_eos'
-
-eos-2:
-    hostname: '172.17.0.3'
-    port: 22
-    username: 'admin'
-    password: 'admin'
-    platform: 'arista_eos'
-```
-
-- Create the following show_version.py file
-
-```
-#!/usr/bin/env python
-from nornir import InitNornir
-from nornir_netmiko import netmiko_send_command
-from nornir_utils.plugins.functions import print_result
-
-# Initialize Nornir, by default it will look for the 
-# hosts.yaml file in the same directory. 
-nr = InitNornir()
-
-# Run the show version command for each of the devices. 
-# store the value in the results variable. 
-result = nr.run(
-    task=netmiko_send_command,
-    command_string="show version"
-)
-
-# print the results in 
-print_result(result)
-```
-
-- You should see the following result: 
-
-![optional_first_pipeline](images/optional_fisrt_pipeline.png)
