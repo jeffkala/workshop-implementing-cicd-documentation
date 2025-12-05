@@ -1,8 +1,36 @@
 {
-    "name": "Implementing CICD Workshop",
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu24.04",
-    "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
-    },
-    "postCreateCommand": "bash /workspaces/workshop-implementing-cicd-documentation/postCreate.sh"
+  "name": "Implementing CICD Workshop",
+  
+  // 1. Base Image: Use an official dev container image for Python
+  "image": "mcr.microsoft.com/devcontainers/python:3.11", 
+  
+  // 2. Features: Add Docker-in-Docker support
+  "features": {
+    // This feature installs Docker CLI and sets up D-i-D
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "mobs_mode": true
+    }
+  },
+
+  // 3. Customizations: Install essential Visual Studio Code extensions
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Python extension
+        "ms-python.python", 
+        // Docker extension for interacting with the daemon
+        "ms-azuretools.vscode-docker",
+        // Optional: Pylance for performance
+        "ms-python.vscode-pylance" 
+      ]
+    }
+  },
+
+  // 4. Post-Create Command: Verify installation (Optional)
+  "postCreateCommand": "bash /workspaces/workshop-implementing-cicd-documentation/postCreate.sh"
+
+  // 5. Forward Ports (Optional)
+  // If your app runs on port 8000, you can forward it automatically
+  // "forwardPorts": [8000]
 }
