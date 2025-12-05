@@ -7,10 +7,7 @@
   // 2. Features: Add Docker-in-Docker support
   "features": {
     // This feature installs Docker CLI and sets up D-i-D
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "version": "latest",
-      "mobs_mode": true
-    }
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
 
   // 3. Customizations: Install essential Visual Studio Code extensions
