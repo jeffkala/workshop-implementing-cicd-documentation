@@ -1,6 +1,11 @@
 {
 	"name": "Implement CICD for NetDevOps",
 	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "16gb",
+        "storage": "32gb"
+    },
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 			// "version": "latest",
